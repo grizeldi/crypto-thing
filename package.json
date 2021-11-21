@@ -1,0 +1,24 @@
+{
+  "name": "crypto-thing",
+  "version": "0.0.1",
+  "description": "Blockchain based data access system",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/grizeldi/crypto-thing.git"
+  },
+  "keywords": [
+    "scam",
+    "crypto",
+    "ethereum"
+  ],
+  "author": "grizeldi, Martin Rode",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/grizeldi/crypto-thing/issues"
+  },
+  "homepage": "https://github.com/grizeldi/crypto-thing#readme"
+}

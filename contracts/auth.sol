@@ -15,6 +15,11 @@ contract AuthContract {
     bytes32 private jobId;
     uint256 private fee;
     
+    event DataRetrieved(
+        address indexed _userAddress
+    );
+    mapping(address => string) private cache;
+    
     constructor() {
         owner = msg.sender;
         
@@ -29,13 +34,20 @@ contract AuthContract {
         
         Chainlink.Request memory request = buildChainlinkRequest(jobId, address(this), this.fulfill.selector);
         //This will be done over https in an actual deployment
-        request.add("get", "http://ourapi.herokuapp.com/?apiKey=" + authToken);
+        request.add("get", "http://ourapi.herokuapp.com/?apiKey=" + authToken + "&data=" + dataId + "&user=" + userAddress);
         request.add("path", "data");
         return sendChainlinkRequestTo(oracle, request, fee);
     }
     
     function fulfill(bytes32 _requestId, string _data) public recordChainlinkFulfillment(_requestId){
-        //TODO callback the original caller
+        //TODO pass caller address into here
+        address userAddress;
+        cache[userAddress] = _data;
+        emit DataRetrieved(userAddress);
+    }
+    
+    function retrieveCachedData() public {
+        return cache[msg.sender];
     }
     
     function setAuthToken(string memory _authToken) public onlyOwner{

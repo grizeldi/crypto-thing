@@ -1,0 +1,17 @@
+version: "3.3"
+services:
+  #crypto-web:
+    #TODO add a local build
+  crypto-blockchain:
+    image: "ethereum/client-go:stable"
+    entrypoint: geth --http --http.addr 0.0.0.0 --http.corsdomain "*" --datadir /home/geth/ --dev
+    ports:
+      - "8545:8545"
+      - "30303:30303"
+  crypto-database:
+    image: "mongo:5.0"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=RubyRose
+      - MONGO_INITDB_ROOT_PASSWORD=thanatoast
+    ports:
+      - "27017:27017"

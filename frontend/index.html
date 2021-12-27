@@ -1,9 +1,20 @@
 <html>
+
     <head>
         <title>Crypto Thing</title>
         <script src="/jquery.js"></script>
+        <script src="/web3.min.js"></script>
+
+        <script>
+            $(document).ready(() => {
+                //Load the available content
+                const web3 = new Web3(Web3.givenProvider || "ws://localhost:8545");
+            });
+        </script>
     </head>
+
     <body>
         Testing.
     </body>
+
 </html>

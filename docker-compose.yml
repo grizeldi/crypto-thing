@@ -5,9 +5,10 @@ services:
   crypto-blockchain:
     container_name: crypto-blockchain
     image: "ethereum/client-go:stable"
-    entrypoint: geth --http --http.addr 0.0.0.0 --http.corsdomain "*" --datadir /home/geth/ --dev
+    entrypoint: geth --http --http.addr 0.0.0.0 --http.corsdomain "*" --http.api web3,eth,debug,personal,net --datadir /home/geth/ --dev
     ports:
       - "8545:8545"
+      - "8546:8546"
       - "30303:30303"
   crypto-database:
     container_name: crypto-database

@@ -1,4 +1,7 @@
 const { MongoClient } = require("mongodb");
+const web3 = require("web3");
+const w3acc = require('web3-eth-accounts');
+const w3personal = require('web3-eth-personal');
 
 // In a non local deployment, don't hardcode the username/password combo.
 const adminUri = "mongodb://RubyRose:thanatoast@localhost:27017/";
@@ -29,6 +32,7 @@ async function run() {
         const database = client.db("crypto");
         const rolesCollection = database.collection("roles");
         const dataCollection = database.collection("data");
+        const usersColelction = database.collection("users");
 
         // Add the roles
         defaultRoles = [
@@ -39,12 +43,26 @@ async function run() {
         ];
         await rolesCollection.insertMany(defaultRoles);
 
+        // Add the data
         defaultData = [
             {title: "Earnings Report 1999", content: "In that year we earned such and such moniez. It was a good year.", roles: [defaultRoles[0]._id, defaultRoles[3]._id]},
             {title: "Promotional Pamphlet June 2020", content: "<insert marketing text here>", roles: [defaultRoles[3]._id]},
             {title: "Open Positions April 2020", content: "Web Developers. Like seriously, we need more of those.", roles: [defaultRoles[1]._id]}
         ]
         await dataCollection.insertMany(defaultData);
+
+        // Add the users
+        defaultUsers = [
+            {name: "Janez Novak", roles: [defaultRoles[1]._id], address: "", passphrase: "jonez"},
+            {name: "Anastazija Petek", roles: [defaultRoles[3]._id], address: "", passphrase: "sosedovkuza"}
+        ];
+        const personal = new w3personal('http://localhost:8545'); // Weee, plain text passwords over http, here we come
+        for (const user of defaultUsers){
+            const address = await personal.newAccount(user.passphrase);
+            user.address = address;
+            delete user.passphrase;
+        }
+        await usersColelction.insertMany(defaultUsers);
     } catch(err) {
         console.log(err);
     }finally {

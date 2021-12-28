@@ -25,6 +25,7 @@
   "dependencies": {
     "express": "^4.17.2",
     "jquery": "^3.6.0",
+    "mongodb": "^4.2.2",
     "web3": "^1.6.1"
   }
 }

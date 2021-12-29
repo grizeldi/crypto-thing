@@ -1,6 +1,6 @@
 const express = require("express");
 const app = express();
-const PORT = 5000;
+const PORT = process.env.PORT;
 
 app.use(express.static("frontend"));
 // Frontend dependencies that are installed via npm

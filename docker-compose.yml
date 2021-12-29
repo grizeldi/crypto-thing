@@ -1,7 +1,18 @@
 version: "3.3"
 services:
-  #crypto-web:
-    #TODO add a local build
+  crypto-web:
+    container_name: crypto-webserver
+    image: crypto-backend
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    environment:
+      - PORT=5000
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
   crypto-blockchain:
     container_name: crypto-blockchain
     image: "ethereum/client-go:stable"
@@ -18,3 +29,10 @@ services:
       - MONGO_INITDB_ROOT_PASSWORD=thanatoast
     ports:
       - "27017:27017"
+  crypto-initializer:
+    container_name: crypto-initializer
+    image: crypto-backend
+    entrypoint: npm run setup
+    depends_on:
+      - "crypto-blockchain"
+      - "crypto-database"

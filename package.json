@@ -2,10 +2,10 @@
   "name": "crypto-thing",
   "version": "0.0.1",
   "description": "Blockchain based data access system",
-  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "backend": "node backend/main.js"
+    "backend": "node backend/main.js",
+    "setup": "node backend/setup.js"
   },
   "repository": {
     "type": "git",

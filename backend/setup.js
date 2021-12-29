@@ -1,7 +1,8 @@
 const { MongoClient } = require("mongodb");
-const web3 = require("web3");
-const w3acc = require('web3-eth-accounts');
+const Web3 = require("web3");
+const web3 = new Web3("http://localhost:8545");
 const w3personal = require('web3-eth-personal');
+const w3eth = require('web3-eth');
 
 // In a non local deployment, don't hardcode the username/password combo.
 const adminUri = "mongodb://RubyRose:thanatoast@localhost:27017/";
@@ -52,14 +53,17 @@ async function run() {
         await dataCollection.insertMany(defaultData);
 
         // Add the users
+        console.log("Creating default users.");
         defaultUsers = [
             {name: "Janez Novak", roles: [defaultRoles[1]._id], address: "", passphrase: "jonez"},
             {name: "Anastazija Petek", roles: [defaultRoles[3]._id], address: "", passphrase: "sosedovkuza"}
         ];
         const personal = new w3personal('http://localhost:8545'); // Weee, plain text passwords over http, here we come
+        const eth = new w3eth('http://localhost:8545');
         for (const user of defaultUsers){
             const address = await personal.newAccount(user.passphrase);
             user.address = address;
+            eth.sendTransaction({from: await eth.getCoinbase(), to: address, value: 1000000000000000000}); //Gib people money to run the contracts
             delete user.passphrase;
         }
         await usersColelction.insertMany(defaultUsers);

@@ -117,6 +117,11 @@ async function run() {
     await personal.unlockAccount(adminAddress, "testingpassword", 30);
     dataIdOracleContract = await dataIdOracleContract.deploy({data: dataIDOracleBytecode}).send({from: adminAddress});
     dataOracleContract = await dataOracleContract.deploy({data: dataOracleBytecode}).send({from: adminAddress});
-    console.log("Deployed the ID oracle to " + dataIdOracleContract.options.address + " and the data oracle to " + dataOracleContract.options.address);
+    const outputConfig = {idOracleAddress: dataIdOracleContract.options.address, dataOracleAddress: dataOracleContract.options.address}
+    console.log("Deployed the ID oracle to " + outputConfig.idOracleAddress + " and the data oracle to " + outputConfig.dataOracleAddress);
+
+    fs.writeFileSync("config/chainconfig.json", JSON.stringify(outputConfig));
+    console.log("Contract addresses saved into server config.");
+    console.log("Setup finished.");
 }
 run().catch(console.dir);

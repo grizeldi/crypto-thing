@@ -16,15 +16,7 @@ contract DataIDOracle {
     * Called to request the available IDs to the sender.
     */
     function request() public {
-        //emit OnDataRequest(msg.sender);
-
-        // The following lines are for debugging the frontend, delete when the js part of the oracle works.
-        // Data IDs will need to be changed depending on what's in your database.
-        string[] memory hardcodedIDs = new string[](1);
-        hardcodedIDs[0] = "61cda92ad0730018758b4283";
-        //fulfill(msg.sender, hardcodedIDs); //This won't work because ownerOnly
-        cache[msg.sender] = hardcodedIDs;
-        emit DataAvailable(msg.sender);
+        emit OnDataRequest(msg.sender);
     }
 
     /**

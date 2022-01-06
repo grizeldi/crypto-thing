@@ -13,14 +13,19 @@ services:
   #   volumes:
   #     - .:/usr/src/app
   #     - /usr/src/app/node_modules
+  #   depends_on:
+  #     - crypto-database
+  #     - crypto-blockchain
   crypto-blockchain:
     container_name: crypto-blockchain
-    image: "ethereum/client-go:stable"
-    entrypoint: geth --http --http.addr 0.0.0.0 --http.corsdomain "*" --http.api web3,eth,debug,personal,net --datadir /home/geth/ --dev --allow-insecure-unlock
+    image: "ethereum/client-go:latest"
+    entrypoint: geth --http --http.addr 0.0.0.0 --http.corsdomain "*" --http.api web3,eth,debug,personal,net --ws --ws.addr 0.0.0.0 --ws.port 8546 --ws.api eth,net,web3 --ws.origins '*' --datadir /home/geth/ --allow-insecure-unlock --dev --miner.threads=4
     ports:
       - "8545:8545"
       - "8546:8546"
       - "30303:30303"
+    volumes:
+      - /home/geth
   crypto-database:
     container_name: crypto-database
     image: "mongo:5.0"

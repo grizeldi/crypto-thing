@@ -117,7 +117,9 @@ async function run() {
     await personal.unlockAccount(adminAddress, "testingpassword", 30);
     dataIdOracleContract = await dataIdOracleContract.deploy({data: dataIDOracleBytecode}).send({from: adminAddress});
     dataOracleContract = await dataOracleContract.deploy({data: dataOracleBytecode}).send({from: adminAddress});
-    const outputConfig = {idOracleAddress: dataIdOracleContract.options.address, dataOracleAddress: dataOracleContract.options.address}
+    const outputConfig = {idOracleAddress: dataIdOracleContract.options.address, idOracleAbi: dataIDOracleAbi, 
+        dataOracleAddress: dataOracleContract.options.address, dataOracleAbi: dataOracleAbi,
+        adminAddress: adminAddress}
     console.log("Deployed the ID oracle to " + outputConfig.idOracleAddress + " and the data oracle to " + outputConfig.dataOracleAddress);
 
     fs.writeFileSync("config/chainconfig.json", JSON.stringify(outputConfig));

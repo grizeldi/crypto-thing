@@ -1,0 +1,7 @@
+.deps/
+.git/
+config/
+node_modules/
+LICENSE
+docker-compose.yml
+contracts/artifacts

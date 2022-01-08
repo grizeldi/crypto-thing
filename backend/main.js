@@ -3,6 +3,7 @@ const app = express();
 const fs = require("fs");
 const exec = require("await-exec");
 const fileIdOracle = require("./fileIDoracle");
+const dataOracle = require("./dataOracle");
 
 const PORT = process.env.PORT;
 const CONFIG_LOCATION = "config/";
@@ -16,7 +17,9 @@ async function start() {
     }
 
     await fileIdOracle.connectToDatabase();
+    await dataOracle.connectToDatabase();
     fileIdOracle.listen();
+    dataOracle.listen();
 
     app.use(express.static("frontend"));
     // Frontend dependencies that are installed via npm

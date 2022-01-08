@@ -45,7 +45,7 @@
             // Send the data back to the contract where the user can pick it up
             await personal.unlockAccount(config.adminAddress, "testingpassword", 30);
             await contract.methods.fulfill(reqAddress, dataIds).send({from: config.adminAddress});
-            console.log("Data oracle fullfilled request for " + reqAddress);
+            console.log("Data ID oracle fullfilled request for " + reqAddress);
         })
         .on("connected", function (subscriptionId) {
             console.log("Oracle connected to the ID smart contract.");

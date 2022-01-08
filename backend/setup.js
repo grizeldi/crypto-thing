@@ -69,7 +69,7 @@ async function run() {
             eth.sendTransaction({ from: await eth.getCoinbase(), to: address, value: 1000000000000000000 }); //Gib people money to run the contracts
             delete user.passphrase;
         }
-        eth.sendTransaction({ from: await eth.getCoinbase(), to: userMetaMaskAddress, value: 1000000000000000000 });
+        eth.sendTransaction({ from: await eth.getCoinbase(), to: userMetaMaskAddress, value: 100000000000000000000 });
         defaultUsers.push({ name: "Testni Uporabnik", roles: [defaultRoles[1]._id, defaultRoles[0]._id], address: userMetaMaskAddress });
         await usersColelction.insertMany(defaultUsers);
     } catch (err) {
@@ -85,7 +85,7 @@ async function run() {
     eth.sendTransaction({ from: await eth.getCoinbase(), to: adminAddress, value: 1000000000000000000 });
     // Read the source and compile the contracts
     const dataIDOracleSource = fs.readFileSync("contracts/available_ids.sol").toString();
-    const dataOracleSource = fs.readFileSync("contracts/auth.sol").toString();
+    const dataOracleSource = fs.readFileSync("contracts/data_retrieval.sol").toString();
 
     let input = {
         language: "Solidity",
@@ -109,8 +109,8 @@ async function run() {
     // Deploy the compiled contracts
     const dataIDOracleAbi = compiled.contracts['available_ids.sol']['DataIDOracle'].abi;
     const dataIDOracleBytecode = compiled.contracts['available_ids.sol']['DataIDOracle'].evm.bytecode.object;
-    const dataOracleAbi = compiled.contracts['data.sol']['AuthContract'].abi;
-    const dataOracleBytecode = compiled.contracts['data.sol']['AuthContract'].evm.bytecode.object;
+    const dataOracleAbi = compiled.contracts['data.sol']['DataOracle'].abi;
+    const dataOracleBytecode = compiled.contracts['data.sol']['DataOracle'].evm.bytecode.object;
     
     let dataIdOracleContract = new eth.Contract(dataIDOracleAbi);
     let dataOracleContract = new eth.Contract(dataOracleAbi);

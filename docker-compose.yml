@@ -1,20 +1,20 @@
 version: "3.3"
 services:
-  crypto-web:
-    container_name: crypto-webserver
-    image: crypto-backend
-    build:
-      context: ./
-      dockerfile: Dockerfile
-    environment:
-      - PORT=5000
-    ports:
-      - "5000:5000"
-    volumes:
-      - /usr/src/app/node_modules
-    depends_on:
-      - crypto-database
-      - crypto-blockchain
+  # crypto-web:
+  #   container_name: crypto-webserver
+  #   image: crypto-backend
+  #   build:
+  #     context: ./
+  #     dockerfile: Dockerfile
+  #   environment:
+  #     - PORT=5000
+  #   ports:
+  #     - "5000:5000"
+  #   volumes:
+  #     - /usr/src/app/node_modules
+  #   depends_on:
+  #     - crypto-database
+  #     - crypto-blockchain
   crypto-blockchain:
     container_name: crypto-blockchain
     image: "ethereum/client-go:latest"

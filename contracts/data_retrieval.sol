@@ -6,7 +6,7 @@ contract DataOracle {
     mapping(address => string) private cache;
 
     // Caught on the JS server side to process the request
-    event OnDataRequest(address indexed _fromUser, string indexed _dataId);
+    event OnDataRequest(address indexed _fromUser, string _dataId);
     // Caught by the client once the data is ready
     event DataAvailable(address indexed _forUser);
     // Caught by the client if the user doesn't have sufficient permissions
@@ -28,8 +28,12 @@ contract DataOracle {
     * If the token is null, it means an authorization failure.
     */
     function fulfill(address forUser, string memory downloadToken) onlyOwner public {
-        cache[forUser] = downloadToken;
-        emit DataAvailable(forUser);
+        if (keccak256(abi.encodePacked(downloadToken)) == keccak256(abi.encodePacked("null"))){
+            emit AuthorizationFailure(forUser);
+        } else {
+            cache[forUser] = downloadToken;
+            emit DataAvailable(forUser);
+        }
     }
 
     /**

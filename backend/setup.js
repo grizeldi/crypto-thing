@@ -12,7 +12,7 @@ const solidityCompiler = require('solc');
 // In a non local deployment, don't hardcode the username/password combo.
 const adminUri = paths.MONGO_ADMIN_URL;
 const uri = paths.MONGO_URL;
-const userMetaMaskAddress = "0xbe4C690E2CF401804b409e2B64d885430b0983a2"; //TODO move this into an env variable
+const userMetaMaskAddress = process.env.METAMASK_ADDRESS != null ? process.env.METAMASK_ADDRESS : "0xbe4C690E2CF401804b409e2B64d885430b0983a2"; //hardcoded address is for dev, so I don't need to specify the env every time
 
 async function run() {
     // Delete the DB

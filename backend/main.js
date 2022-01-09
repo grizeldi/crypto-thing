@@ -13,7 +13,7 @@ async function start() {
     // Load config and run setup.js if it's not found
     if (!fs.existsSync(CONFIG_LOCATION + CONFIG_FILENAME)) {
         console.log("Environment is not configured, running setup script.");
-        await exec("sleep 15 && npm run setup").then((sout, serr) => {if (sout) console.log(sout.stdout)});
+        await exec("sleep 10 && npm run setup").then((sout, serr) => {if (sout) console.log(sout.stdout)});
     }
 
     await fileIdOracle.connectToDatabase();

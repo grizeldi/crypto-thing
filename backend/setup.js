@@ -1,16 +1,17 @@
+const paths = require("./config");
 const { MongoClient } = require("mongodb");
 const Web3 = require("web3");
-const web3 = new Web3("http://localhost:8545");
+const web3 = new Web3(paths.BLOCKCHAIN_HTTP_URL);
 const w3personal = require('web3-eth-personal');
 const w3eth = require('web3-eth');
-const personal = new w3personal('http://localhost:8545'); // Weee, plain text passwords over http, here we come
-const eth = new w3eth('http://localhost:8545');
+const personal = new w3personal(paths.BLOCKCHAIN_HTTP_URL); // Weee, plain text passwords over http, here we come
+const eth = new w3eth(paths.BLOCKCHAIN_HTTP_URL);
 const fs = require('fs');
 const solidityCompiler = require('solc');
 
 // In a non local deployment, don't hardcode the username/password combo.
-const adminUri = "mongodb://RubyRose:thanatoast@localhost:27017/";
-const uri = "mongodb://localhost:27017/";//?retryWrites=true&writeConcern=majority";
+const adminUri = paths.MONGO_ADMIN_URL;
+const uri = paths.MONGO_URL;
 const userMetaMaskAddress = "0xbe4C690E2CF401804b409e2B64d885430b0983a2"; //TODO move this into an env variable
 
 async function run() {

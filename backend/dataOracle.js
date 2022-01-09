@@ -1,15 +1,16 @@
 (function () {
+    const paths = require("./config");
     const Web3 = require("web3");
-    const web3 = new Web3("ws://localhost:8546");
+    const web3 = new Web3(paths.BLOCKCHAIN_WS_URL);
     const w3personal = require('web3-eth-personal');
     const w3eth = require('web3-eth');
-    const personal = new w3personal('http://localhost:8545'); // Weee, plain text passwords over http, here we come
-    const eth = new w3eth("ws://localhost:8546");
+    const personal = new w3personal(paths.BLOCKCHAIN_HTTP_URL);
+    const eth = new w3eth(paths.BLOCKCHAIN_WS_URL);
     const fs = require('fs');
     const mongo = require("mongodb");
     const { MongoClient } = require("mongodb");
 
-    const uri = "mongodb://RubyRose:thanatoast@localhost:27017/";
+    const uri = paths.MONGO_ADMIN_URL;
 
     let mongoClient = new MongoClient(uri);
 

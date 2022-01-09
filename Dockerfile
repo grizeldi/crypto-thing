@@ -11,6 +11,7 @@ COPY package-lock.json package-lock.json
 RUN npm install
 
 COPY . .
+RUN mkdir config
 
 EXPOSE ${PORT}
 

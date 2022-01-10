@@ -1,20 +1,43 @@
 <html>
 
-    <head>
-        <title>Crypto Thing</title>
-        <script src="/jquery.js"></script>
-        <script src="/web3.min.js"></script>
+<head>
+    <title>Crypto Thing</title>
+    <script src="/jquery.js"></script>
+    <script src="/web3.min.js"></script>
 
-        <script>
-            $(document).ready(() => {
-                //Load the available content
-                const web3 = new Web3(Web3.givenProvider || "ws://localhost:8545");
-            });
-        </script>
-    </head>
+    <script>
+        $(document).ready(async () => {
+            //Load the available content
+            let web3 = new Web3("ws://localhost:8546");
+            if (window.ethereum) {
+                await window.ethereum.send('eth_requestAccounts');
+                web3 = new Web3(window.ethereum);
+            }
+            const config = await $.ajax("/chainconfig.json");
+            console.log(config);
 
-    <body>
-        Testing.
-    </body>
+            ethereum.request({ method: 'eth_accounts' })
+                .then(async (accounts) => {
+                    const idContract = new web3.eth.Contract(config.idOracleAbi, config.idOracleAddress);
+                    idContract.events.DataAvailable({}, async (error, event) => {
+                        if (event.returnValues._forUser.toLowerCase() === accounts[0].toLowerCase()) {
+                            const data = await idContract.methods.readData().call({from: accounts[0]});
+                            // Ok, here we (theoretically) have the user data IDs
+                            console.log(data);
+                            //TODO display the data in the DOM
+                        }
+                    });
+                    await idContract.methods.request().send({ from: accounts[0] });
+                })
+                .catch((error) => {
+                    window.alert("There was a problem contacting the blockchain for the user IDs");
+                });
+        });
+    </script>
+</head>
+
+<body>
+    Testing.
+</body>
 
 </html>

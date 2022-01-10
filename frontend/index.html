@@ -34,7 +34,10 @@
                             // Ok, here we (theoretically) have the user data IDs
                             console.log(data);
                             //TODO display the data in the DOM
-                            $('#button1').html(data[0]);
+                            for (let dataid in data){
+                                $('#buttondiv').append("<button type='button'>" + data[dataid] + "</button><br/>");
+                            }
+                            $("button").on("click", handleClick);
                         }
                     });
                     await idContractMetamask.methods.request().send({ from: accounts[0] });
@@ -43,35 +46,33 @@
                     console.log(error);
                     window.alert("There was a problem contacting the blockchain for the user IDs");
                 });
+        }
 
+        async function handleClick(event) {
+            const config = await $.ajax("/chainconfig.json");
+
+            ethereum.request({ method: 'eth_accounts' })
+                .then(async (accounts) => {
+                    const dataContractMetamask = new metamaskWeb3.eth.Contract(config.dataOracleAbi, config.dataOracleAddress);
+                    const dataContract = new web3.eth.Contract(config.dataOracleAbi, config.dataOracleAddress);
+                    dataContract.events.DataAvailable({}, async (error, event) => {
+                        if (event.returnValues._forUser.toLowerCase() === accounts[0].toLowerCase()) {
+                            await sleep(4000);
+                            const data = await dataContractMetamask.methods.readData().call({ from: accounts[0] });
+                            //TODO display the data in the DOM
+                            window.alert(data);
+                        }
+                    });
+                    await dataContractMetamask.methods.request(event.target.innerHTML).send({ from: accounts[0] }); //change the data ID from innerHTML to something more useful
+                })
+                .catch((error) => {
+                    console.log(error);
+                    window.alert("There was a problem contacting the blockchain for the data.");
+                });
         }
 
         $(document).ready(async () => {
             //Load the available content
-            $("#button1").on("click", async (event) => {
-                console.log("button");
-                const config = await $.ajax("/chainconfig.json");
-    
-                ethereum.request({ method: 'eth_accounts' })
-                    .then(async (accounts) => {
-                        const dataContractMetamask = new metamaskWeb3.eth.Contract(config.dataOracleAbi, config.dataOracleAddress);
-                        const dataContract = new web3.eth.Contract(config.dataOracleAbi, config.dataOracleAddress);
-                        dataContract.events.DataAvailable({}, async (error, event) => {
-                            if (event.returnValues._forUser.toLowerCase() === accounts[0].toLowerCase()) {
-                                await sleep(4000);
-                                const data = await dataContractMetamask.methods.readData().call({ from: accounts[0] });
-                                //TODO display the data in the DOM
-                                window.alert(data);
-                            }
-                        });
-                        await dataContractMetamask.methods.request(event.target.innerHTML).send({ from: accounts[0] }); //change the data ID from innerHTML to something more useful
-                    })
-                    .catch((error) => {
-                        console.log(error);
-                        window.alert("There was a problem contacting the blockchain for the data.");
-                    });
-            });
-
             await fetchIDs();
         });
 
@@ -79,8 +80,10 @@
 </head>
 
 <body>
-    <p>Testing.</p>
-    <button type="button" id="button1">Data Button</button>
+    <p>Test frontend for the data access service.</p>
+    <div id="buttondiv">
+        <!-- This is where the buttons get added to. -->
+    </div>
 </body>
 
 </html>

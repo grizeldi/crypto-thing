@@ -8,7 +8,7 @@ services:
       dockerfile: Dockerfile
     environment:
       - PORT=5000
-      - METAMASK_ADDRESS="<replace here>"
+      - METAMASK_ADDRESS=0x6af6C640D33EE3B347E042F7603A051Dd6F8c481
     ports:
       - "5000:5000"
     volumes:

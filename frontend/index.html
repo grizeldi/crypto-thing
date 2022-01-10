@@ -8,11 +8,11 @@
     <script>
         let web3 = new Web3("ws://localhost:8546");
         if (window.ethereum) {
-            // await window.ethereum.send('eth_requestAccounts');
             web3 = new Web3(window.ethereum);
         }
-
+        
         async function fetchIDs() {
+            await window.ethereum.send('eth_requestAccounts');
             const config = await $.ajax("/chainconfig.json");
 
             ethereum.request({ method: 'eth_accounts' })
@@ -30,6 +30,7 @@
                     await idContract.methods.request().send({ from: accounts[0] });
                 })
                 .catch((error) => {
+                    console.log(error);
                     window.alert("There was a problem contacting the blockchain for the user IDs");
                 });
 

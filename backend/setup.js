@@ -54,7 +54,9 @@ async function run() {
         defaultData = [
             { title: "Earnings Report 1999", content: "In that year we earned such and such moniez. It was a good year.", roles: [defaultRoles[0]._id, defaultRoles[3]._id] },
             { title: "Promotional Pamphlet June 2020", content: "<insert marketing text here>", roles: [defaultRoles[3]._id] },
-            { title: "Open Positions April 2020", content: "Web Developers. Like seriously, we need more of those.", roles: [defaultRoles[1]._id] }
+            { title: "Open Positions April 2020", content: "Web Developers. Like seriously, we need more of those.", roles: [defaultRoles[1]._id] },
+            { title: "Junior Web Developer Expertise Test", content: "Task 1: make a calculator in angularjs.\n Task 2: reimplement google homepage's design.", roles: [defaultRoles[1]._id]},
+            { title: "Top Secret Juice Recipe", content: "Mix 2 mangos with 1 avocado. Add cinammon and put into the fridge for at least 2 hours.", roles: [defaultRoles[2]._id]}
         ]
         await dataCollection.insertMany(defaultData);
 

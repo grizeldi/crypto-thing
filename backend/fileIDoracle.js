@@ -40,7 +40,7 @@
             const dataIds = [];
             for (let i = 0; i < roles.length; i++){
                 const dataAvailable = await db.collection("data").find({roles: roles[i]}).toArray();
-                dataAvailable.forEach((datapiece) => dataIds.push(datapiece._id.toString()));
+                dataAvailable.forEach((datapiece) => dataIds.push(datapiece.title + " " + datapiece._id.toString()));
             }
             
             // Send the data back to the contract where the user can pick it up

@@ -33,9 +33,13 @@
                             const data = await idContractMetamask.methods.readData().call({ from: accounts[0] });
                             // Ok, here we (theoretically) have the user data IDs
                             console.log(data);
-                            //TODO display the data in the DOM
                             for (let dataid in data){
-                                $('#buttondiv').append("<button type='button'>" + data[dataid] + "</button><br/>");
+                                let dataArr = data[dataid].split(" ");
+                                let title = dataArr[0];
+                                for (let i = 1; i < dataArr.length - 1; i ++){
+                                    title += " " + dataArr[i];
+                                }
+                                $('#buttondiv').append("<button type='button' value='" + dataArr[dataArr.length - 1] + "'>" + title + "</button><br/>");
                             }
                             $("button").on("click", handleClick);
                         }
@@ -63,7 +67,7 @@
                             window.alert(data);
                         }
                     });
-                    await dataContractMetamask.methods.request(event.target.innerHTML).send({ from: accounts[0] }); //change the data ID from innerHTML to something more useful
+                    await dataContractMetamask.methods.request(event.target.value).send({ from: accounts[0] }); //change the data ID from innerHTML to something more useful
                 })
                 .catch((error) => {
                     console.log(error);

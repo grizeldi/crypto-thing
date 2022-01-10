@@ -12,6 +12,12 @@
             metamaskWeb3 = new Web3(window.ethereum);
         }
         
+        function sleep(ms) {
+            return new Promise((resolve) => {
+                setTimeout(resolve, ms);
+            });
+        }
+
         async function fetchIDs() {
             await window.ethereum.send('eth_requestAccounts');
             const config = await $.ajax("/chainconfig.json");
@@ -23,6 +29,7 @@
                     const idContract = new web3.eth.Contract(config.idOracleAbi, config.idOracleAddress);
                     idContract.events.DataAvailable({}, async (error, event) => {
                         if (event.returnValues._forUser.toLowerCase() === accounts[0].toLowerCase()) {
+                            await sleep(4000); // I am very sorry end user, but blame metamask for not supporting events properly.
                             const data = await idContractMetamask.methods.readData().call({ from: accounts[0] });
                             // Ok, here we (theoretically) have the user data IDs
                             console.log(data);
@@ -51,6 +58,7 @@
                         const dataContract = new web3.eth.Contract(config.dataOracleAbi, config.dataOracleAddress);
                         dataContract.events.DataAvailable({}, async (error, event) => {
                             if (event.returnValues._forUser.toLowerCase() === accounts[0].toLowerCase()) {
+                                await sleep(4000);
                                 const data = await dataContractMetamask.methods.readData().call({ from: accounts[0] });
                                 //TODO display the data in the DOM
                                 window.alert(data);

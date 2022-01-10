@@ -6,25 +6,25 @@
     <script src="/web3.min.js"></script>
 
     <script>
-        $(document).ready(async () => {
-            //Load the available content
-            let web3 = new Web3("ws://localhost:8546");
-            if (window.ethereum) {
-                await window.ethereum.send('eth_requestAccounts');
-                web3 = new Web3(window.ethereum);
-            }
+        let web3 = new Web3("ws://localhost:8546");
+        if (window.ethereum) {
+            // await window.ethereum.send('eth_requestAccounts');
+            web3 = new Web3(window.ethereum);
+        }
+
+        async function fetchIDs() {
             const config = await $.ajax("/chainconfig.json");
-            console.log(config);
 
             ethereum.request({ method: 'eth_accounts' })
                 .then(async (accounts) => {
                     const idContract = new web3.eth.Contract(config.idOracleAbi, config.idOracleAddress);
                     idContract.events.DataAvailable({}, async (error, event) => {
                         if (event.returnValues._forUser.toLowerCase() === accounts[0].toLowerCase()) {
-                            const data = await idContract.methods.readData().call({from: accounts[0]});
+                            const data = await idContract.methods.readData().call({ from: accounts[0] });
                             // Ok, here we (theoretically) have the user data IDs
                             console.log(data);
                             //TODO display the data in the DOM
+                            $('#button1').html(data[0]);
                         }
                     });
                     await idContract.methods.request().send({ from: accounts[0] });
@@ -32,12 +32,42 @@
                 .catch((error) => {
                     window.alert("There was a problem contacting the blockchain for the user IDs");
                 });
+
+        }
+
+        $(document).ready(async () => {
+            //Load the available content
+            $("#button1").on("click", async (event) => {
+                console.log("button");
+                const config = await $.ajax("/chainconfig.json");
+    
+                ethereum.request({ method: 'eth_accounts' })
+                    .then(async (accounts) => {
+                        const dataContract = new web3.eth.Contract(config.dataOracleAbi, config.dataOracleAddress);
+                        dataContract.events.DataAvailable({}, async (error, event) => {
+                            if (event.returnValues._forUser.toLowerCase() === accounts[0].toLowerCase()) {
+                                const data = await dataContract.methods.readData().call({ from: accounts[0] });
+                                //TODO display the data in the DOM
+                                window.alert(data);
+                            }
+                        });
+                        await dataContract.methods.request(event.target.innerHTML).send({ from: accounts[0] }); //change the data ID from innerHTML to something more useful
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                        window.alert("There was a problem contacting the blockchain for the data.");
+                    });
+            });
+
+            await fetchIDs();
         });
+
     </script>
 </head>
 
 <body>
-    Testing.
+    <p>Testing.</p>
+    <button type="button" id="button1">Data Button</button>
 </body>
 
 </html>

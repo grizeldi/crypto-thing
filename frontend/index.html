@@ -7,8 +7,9 @@
 
     <script>
         let web3 = new Web3("ws://localhost:8546");
+        let metamaskWeb3;
         if (window.ethereum) {
-            web3 = new Web3(window.ethereum);
+            metamaskWeb3 = new Web3(window.ethereum);
         }
         
         async function fetchIDs() {
@@ -17,17 +18,19 @@
 
             ethereum.request({ method: 'eth_accounts' })
                 .then(async (accounts) => {
+                    // We're using both providers because metamask's implementation of events doesn't work 90% of the time
+                    const idContractMetamask = new metamaskWeb3.eth.Contract(config.idOracleAbi, config.idOracleAddress);
                     const idContract = new web3.eth.Contract(config.idOracleAbi, config.idOracleAddress);
                     idContract.events.DataAvailable({}, async (error, event) => {
                         if (event.returnValues._forUser.toLowerCase() === accounts[0].toLowerCase()) {
-                            const data = await idContract.methods.readData().call({ from: accounts[0] });
+                            const data = await idContractMetamask.methods.readData().call({ from: accounts[0] });
                             // Ok, here we (theoretically) have the user data IDs
                             console.log(data);
                             //TODO display the data in the DOM
                             $('#button1').html(data[0]);
                         }
                     });
-                    await idContract.methods.request().send({ from: accounts[0] });
+                    await idContractMetamask.methods.request().send({ from: accounts[0] });
                 })
                 .catch((error) => {
                     console.log(error);
@@ -44,15 +47,16 @@
     
                 ethereum.request({ method: 'eth_accounts' })
                     .then(async (accounts) => {
+                        const dataContractMetamask = new metamaskWeb3.eth.Contract(config.dataOracleAbi, config.dataOracleAddress);
                         const dataContract = new web3.eth.Contract(config.dataOracleAbi, config.dataOracleAddress);
                         dataContract.events.DataAvailable({}, async (error, event) => {
                             if (event.returnValues._forUser.toLowerCase() === accounts[0].toLowerCase()) {
-                                const data = await dataContract.methods.readData().call({ from: accounts[0] });
+                                const data = await dataContractMetamask.methods.readData().call({ from: accounts[0] });
                                 //TODO display the data in the DOM
                                 window.alert(data);
                             }
                         });
-                        await dataContract.methods.request(event.target.innerHTML).send({ from: accounts[0] }); //change the data ID from innerHTML to something more useful
+                        await dataContractMetamask.methods.request(event.target.innerHTML).send({ from: accounts[0] }); //change the data ID from innerHTML to something more useful
                     })
                     .catch((error) => {
                         console.log(error);
